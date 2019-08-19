@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using sistemav5.Models;
+using sistemav5.Services;
 
 namespace sistemav5
 {
@@ -38,6 +39,11 @@ namespace sistemav5
 
             services.AddDbContext<sistemav5Context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("sistemav5Context")));
+
+            services.AddScoped<PedidoService>();
+            services.AddScoped<ProdutoService>();
+            services.AddScoped<ClienteService>();
+            services.AddScoped<ItensPedidoService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,22 +6,38 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using sistemav5.Models;
+using sistemav5.Models.ViewModels;
+using sistemav5.Services;
 
 namespace sistemav5.Controllers
 {
     public class PedidosController : Controller
     {
         private readonly sistemav5Context _context;
+        private readonly PedidoService _pedidoService;
+        private readonly ProdutoService _produtoService;
+        private readonly ClienteService _clienteService;
+        private readonly ItensPedidoService _itensPedidoService;
 
-        public PedidosController(sistemav5Context context)
+        public PedidosController(sistemav5Context context
+                                                        , PedidoService pedidoService
+                                                        , ProdutoService produtoService
+                                                        , ItensPedidoService itensPedidoService
+                                                        , ClienteService clienteService)
         {
             _context = context;
+            _pedidoService = pedidoService;
+            _produtoService = produtoService;
+            _clienteService = clienteService;
+            _itensPedidoService = itensPedidoService;
         }
 
         // GET: Pedidos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Pedido.ToListAsync());
+            var list = await _pedidoService.FindPedidosAsync();
+            return View(list);
+            //return View(await _context.Pedido.ToListAsync());
         }
 
         // GET: Pedidos/Details/5
@@ -43,9 +59,13 @@ namespace sistemav5.Controllers
         }
 
         // GET: Pedidos/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var produto = await _produtoService.FindProdutosAsync();
+            var clientes = await _clienteService.FindClientesAsync();
+            var itensPedido = await _itensPedidoService.FindItensPedidoAsync();
+            var viewModel = new PedidoViewModel { Clientes = clientes, ItensPedidos = itensPedido };
+            return View(viewModel);
         }
 
         // POST: Pedidos/Create
