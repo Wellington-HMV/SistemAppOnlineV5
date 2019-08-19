@@ -24,14 +24,52 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Back to List</a>
             </div>
         </form>
     </div>
+    <p>
+        <a asp-action="Index">Lista</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantidade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Produtos)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+                <tr>
+                    <td>
+                       @* @Html.DisplayFor(modelItem => item.ProdutoId)*@
+                    </td>
+                    <td>
+                       @* @Html.DisplayFor(modelItem => item.Quantidade)*@
+                    </td>
+                    <td>
+                       @* @Html.DisplayFor(modelItem => item.Produtos)*@
+                        @*@Html.DisplayFor(modelItem => item.ProdutoIp(item.ProdutoId))*@
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="sad">Edit</a> |
+                        <a asp-action="Details" asp-route-id="sada">Details</a> |
+                        <a asp-action="Delete" asp-route-id="asdasd">Delete</a>
+                    </td>
+                </tr>
+            
+        </tbody>
+    </table>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
