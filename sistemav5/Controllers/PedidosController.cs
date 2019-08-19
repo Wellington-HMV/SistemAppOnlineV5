@@ -73,15 +73,18 @@ namespace sistemav5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Quantidade,ItensPedidoId,ClienteId")] Pedido pedido)
+        public async Task<IActionResult> Create(Pedido pedido)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
+                var clientes = await _clienteService.FindClientesAsync();
+                var itensPedido = await _itensPedidoService.FindItensPedidoAsync();
+                var viewModel = new PedidoViewModel { Clientes = clientes, ItensPedidos = itensPedido };
+                return View(viewModel);
+            }
                 _context.Add(pedido);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            return View(pedido);
         }
 
         // GET: Pedidos/Edit/5
