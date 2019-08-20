@@ -6,46 +6,66 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using sistemav5.Models;
+using sistemav5.Models.ViewModels;
+using sistemav5.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace sistemav5.Controllers
 {
     public class ItensPedidosController : Controller
     {
         private readonly sistemav5Context _context;
+        private readonly PedidoService _pedidoService;
+        private readonly ProdutoService _produtoService;
+        private readonly ClienteService _clienteService;
+        private readonly ItensPedidoService _itensPedidoService;
 
-        public ItensPedidosController(sistemav5Context context)
+        public ItensPedidosController(sistemav5Context context
+                                                        , PedidoService pedidoService
+                                                        , ProdutoService produtoService
+                                                        , ItensPedidoService itensPedidoService
+                                                        , ClienteService clienteService)
         {
             _context = context;
+            _pedidoService = pedidoService;
+            _produtoService = produtoService;
+            _clienteService = clienteService;
+            _itensPedidoService = itensPedidoService;
         }
 
         // GET: ItensPedidos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ItensPedido.Include(obj=>obj.Produtos).ToListAsync());
+            var list = await _itensPedidoService.FindItensPedidoAsync();
+            return View(list);
         }
 
         // GET: ItensPedidos/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, Produto produto)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var itensPedido = await _context.ItensPedido
+            var itensPedido = await _context.ItensPedido.Include(p=>p.Produtos)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (itensPedido == null)
             {
                 return NotFound();
             }
-
+            //var prod = await _produtoService.FindProdutosAsync();
+            //var itenId = await _itensPedidoService.FindItensPedidoAsync();
+            //var viewModel = new ItensPedidoViewModel { ItensPedido = itenId,Produtos = itensPedido.Produtos};
             return View(itensPedido);
         }
 
         // GET: ItensPedidos/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var produtos = await _produtoService.FindProdutosAsync();
+            var viewModel = new ItensPedidoViewModel { Produtos = produtos };
+            return View(viewModel);
         }
 
         // POST: ItensPedidos/Create
@@ -53,7 +73,7 @@ namespace sistemav5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProdutoId,Quantidade")] ItensPedido itensPedido)
+        public async Task<IActionResult> Create(ItensPedido itensPedido)
         {
             if (ModelState.IsValid)
             {

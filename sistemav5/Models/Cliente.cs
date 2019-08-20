@@ -15,20 +15,8 @@ namespace sistemav5.Models
         public DateTime DataNascimento { get; set; }
         public string Email { get; set; }
         public int Telefone { get; set; }
-        public int PedidoId { get; set; }
+        public Pedido Pedido { get; set; }
 
         public ICollection<Pedido> Pedidos = new List<Pedido>();
-
-        public Cliente() { }
-
-        public Cliente(int idCliente, string nome, DateTime dataNascimento, string email, int telefone, int pedidoId)
-        {
-            IdCliente = idCliente;
-            Nome = nome;
-            DataNascimento = dataNascimento;
-            Email = email;
-            Telefone = telefone;
-            PedidoId = pedidoId;
-        }
     }
 }

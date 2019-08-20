@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using sistemav5.Models;
 
 namespace sistemav5.Migrations
 {
     [DbContext(typeof(sistemav5Context))]
-    partial class sistemav5ContextModelSnapshot : ModelSnapshot
+    [Migration("20190820182340_V5.0.10")]
+    partial class V5010
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

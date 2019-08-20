@@ -33,7 +33,7 @@ namespace sistemav5.Controllers
             }
 
             var produto = await _context.Produto
-                .FirstOrDefaultAsync(m => m.IdProduto == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (produto == null)
             {
                 return NotFound();
@@ -53,7 +53,7 @@ namespace sistemav5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdProduto,Nome,Preco,Quantidade")] Produto produto)
+        public async Task<IActionResult> Create(Produto produto)
         {
             if (ModelState.IsValid)
             {
@@ -85,9 +85,9 @@ namespace sistemav5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdProduto,Nome,Preco,Quantidade")] Produto produto)
+        public async Task<IActionResult> Edit(int id, Produto produto)
         {
-            if (id != produto.IdProduto)
+            if (id != produto.Id)
             {
                 return NotFound();
             }
@@ -101,7 +101,7 @@ namespace sistemav5.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProdutoExists(produto.IdProduto))
+                    if (!ProdutoExists(produto.Id))
                     {
                         return NotFound();
                     }
@@ -124,7 +124,7 @@ namespace sistemav5.Controllers
             }
 
             var produto = await _context.Produto
-                .FirstOrDefaultAsync(m => m.IdProduto == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (produto == null)
             {
                 return NotFound();
@@ -146,7 +146,7 @@ namespace sistemav5.Controllers
 
         private bool ProdutoExists(int id)
         {
-            return _context.Produto.Any(e => e.IdProduto == id);
+            return _context.Produto.Any(e => e.Id == id);
         }
     }
 }

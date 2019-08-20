@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace sistemav5.Models
@@ -8,6 +9,7 @@ namespace sistemav5.Models
         public int Id { get; set; }
         public int ProdutoId { get; set; }
         public Pedido Pedido { get; set; }
+        public Produto Produto { get; set; }
         public int Quantidade { get; set; }
         public ICollection<Produto> Produtos { get; set; } = new List<Produto>();
 
@@ -15,13 +17,15 @@ namespace sistemav5.Models
         {
         }
 
-        public ItensPedido(int id, int produtoId, Pedido pedido, int quantidade)
+        public ItensPedido(int id, int produtoId, Pedido pedido, Produto produto, int quantidade)
         {
             Id = id;
             ProdutoId = produtoId;
             Pedido = pedido;
+            Produto = produto;
             Quantidade = quantidade;
         }
+
         public void AddProduto(Produto p)
         {
             Produtos.Add(p);
@@ -32,9 +36,10 @@ namespace sistemav5.Models
         }
         public string ProdutoIp(int id)
         {
-            var produtos = Produtos.Where(p => p.IdProduto == id).Select(p => p.Nome).ToString();
+            var produtos = Produtos.Where(p => p.Id == id).Select(p => p.Nome).ToString();
             return produtos;
 
         }
+
     }
 }

@@ -108,7 +108,7 @@ namespace sistemav5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Quantidade,ItensPedidoId,ClienteId")] Pedido pedido)
+        public async Task<IActionResult> Edit(int id,Pedido pedido)
         {
             if (id != pedido.Id)
             {

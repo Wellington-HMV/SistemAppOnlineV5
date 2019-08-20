@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using sistemav5.Models;
 
 namespace sistemav5.Migrations
 {
     [DbContext(typeof(sistemav5Context))]
-    partial class sistemav5ContextModelSnapshot : ModelSnapshot
+    [Migration("20190820125756_v5.0.4")]
+    partial class v504
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +32,8 @@ namespace sistemav5.Migrations
                     b.Property<string>("Email");
 
                     b.Property<string>("Nome");
+
+                    b.Property<int>("PedidoId");
 
                     b.Property<int>("Telefone");
 
@@ -50,8 +54,6 @@ namespace sistemav5.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProdutoId");
-
                     b.ToTable("ItensPedido");
                 });
 
@@ -63,12 +65,13 @@ namespace sistemav5.Migrations
 
                     b.Property<int>("ClienteId");
 
+                    b.Property<int?>("ClienteIdCliente");
+
                     b.Property<int>("ItensPedidoId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId")
-                        .IsUnique();
+                    b.HasIndex("ClienteIdCliente");
 
                     b.HasIndex("ItensPedidoId")
                         .IsUnique();
@@ -78,7 +81,7 @@ namespace sistemav5.Migrations
 
             modelBuilder.Entity("sistemav5.Models.Produto", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdProduto")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -90,27 +93,18 @@ namespace sistemav5.Migrations
 
                     b.Property<int>("Quantidade");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdProduto");
 
                     b.HasIndex("ItensPedidoId");
 
                     b.ToTable("Produto");
                 });
 
-            modelBuilder.Entity("sistemav5.Models.ItensPedido", b =>
-                {
-                    b.HasOne("sistemav5.Models.Produto", "Produto")
-                        .WithMany()
-                        .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("sistemav5.Models.Pedido", b =>
                 {
                     b.HasOne("sistemav5.Models.Cliente", "Cliente")
-                        .WithOne("Pedido")
-                        .HasForeignKey("sistemav5.Models.Pedido", "ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("ClienteIdCliente");
 
                     b.HasOne("sistemav5.Models.ItensPedido", "ItensPedido")
                         .WithOne("Pedido")

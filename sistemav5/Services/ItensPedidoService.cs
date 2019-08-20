@@ -18,5 +18,6 @@ namespace sistemav5.Services
         {
             return await _context.ItensPedido.Include(obj=>obj.Produtos).ToListAsync();
         }
+        
     }
 }

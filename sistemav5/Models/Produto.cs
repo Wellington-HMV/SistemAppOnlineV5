@@ -4,8 +4,8 @@ namespace sistemav5.Models
 {
     public class Produto
     {
-        [Key]
-        public int IdProduto { get; set; }
+        
+        public int Id { get; set; }
         public string Nome { get; set; }
         public double Preco { get; set; }
         public int Quantidade { get; set; }
@@ -13,7 +13,7 @@ namespace sistemav5.Models
 
         public Produto(int idProduto, string nome, double preco, int quantidade)
         {
-            IdProduto = idProduto;
+            Id = idProduto;
             Nome = nome;
             Preco = preco;
             Quantidade = quantidade;
