@@ -21,7 +21,7 @@ namespace sistemav5.Migrations
 
             modelBuilder.Entity("sistemav5.Models.Cliente", b =>
                 {
-                    b.Property<int>("IdCliente")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -33,7 +33,7 @@ namespace sistemav5.Migrations
 
                     b.Property<int>("Telefone");
 
-                    b.HasKey("IdCliente");
+                    b.HasKey("Id");
 
                     b.ToTable("Cliente");
                 });
@@ -44,11 +44,13 @@ namespace sistemav5.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("PedidoId");
+
                     b.Property<int>("ProdutoId");
 
-                    b.Property<int>("Quantidade");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
 
                     b.HasIndex("ProdutoId");
 
@@ -67,11 +69,7 @@ namespace sistemav5.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId")
-                        .IsUnique();
-
-                    b.HasIndex("ItensPedidoId")
-                        .IsUnique();
+                    b.HasIndex("ClienteId");
 
                     b.ToTable("Pedido");
                 });
@@ -82,8 +80,6 @@ namespace sistemav5.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ItensPedidoId");
-
                     b.Property<string>("Nome");
 
                     b.Property<double>("Preco");
@@ -92,15 +88,18 @@ namespace sistemav5.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItensPedidoId");
-
                     b.ToTable("Produto");
                 });
 
             modelBuilder.Entity("sistemav5.Models.ItensPedido", b =>
                 {
+                    b.HasOne("sistemav5.Models.Pedido")
+                        .WithMany("ItensPedidos")
+                        .HasForeignKey("PedidoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("sistemav5.Models.Produto", "Produto")
-                        .WithMany()
+                        .WithMany("ItensPedidos")
                         .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -108,21 +107,9 @@ namespace sistemav5.Migrations
             modelBuilder.Entity("sistemav5.Models.Pedido", b =>
                 {
                     b.HasOne("sistemav5.Models.Cliente", "Cliente")
-                        .WithOne("Pedido")
-                        .HasForeignKey("sistemav5.Models.Pedido", "ClienteId")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("sistemav5.Models.ItensPedido", "ItensPedido")
-                        .WithOne("Pedido")
-                        .HasForeignKey("sistemav5.Models.Pedido", "ItensPedidoId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("sistemav5.Models.Produto", b =>
-                {
-                    b.HasOne("sistemav5.Models.ItensPedido")
-                        .WithMany("Produtos")
-                        .HasForeignKey("ItensPedidoId");
                 });
 #pragma warning restore 612, 618
         }

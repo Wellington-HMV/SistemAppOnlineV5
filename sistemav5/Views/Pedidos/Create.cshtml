@@ -17,7 +17,7 @@
 
             <div class="form-group">
                 <label asp-for="Clientes" class="control-label"></label>
-                <select asp-for="Clientes" asp-items="@(new SelectList(Model.Clientes,"IdCliente","Nome"))" class="form-control"></select>
+                <select asp-for="Clientes" asp-items="@(new SelectList(Model.Clientes,"Id","Nome"))" class="form-control"></select>
             </div>
             <div class="form-group">
 
@@ -33,23 +33,21 @@
 
             </div>
             <div class="form-group">
-                <label asp-for="ItensPedidos" class="control-label"></label>
-                <select asp-for="ItensPedidos" class="form-control" asp-items="@(new SelectList(Model.ItensPedidos,"Id"))"></select>
+                <label asp-for="Produtos" class="control-label"></label>
+                <select asp-for="Produtos" class="form-control" asp-items="@(new SelectList(Model.Produtos,"Id","Nome"))"></select>
             </div>
             @*<div class="form-group">
                     <label asp-for="ClienteId" class="control-label"></label>
                     <input asp-for="ClienteId" class="form-control" />
                     <span asp-validation-for="ClienteId" class="text-danger"></span>
                 </div>*@
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-warning">Voltar</a>
+            <a asp-action="AdicionarProdutos" class="btn btn-success">Adicionar Produtos</a>
+        </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

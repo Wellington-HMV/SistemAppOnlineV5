@@ -10,8 +10,8 @@ using sistemav5.Models;
 namespace sistemav5.Migrations
 {
     [DbContext(typeof(sistemav5Context))]
-    [Migration("20190820130345_v5.0.6")]
-    partial class v506
+    [Migration("20190821194625_v5.3.5")]
+    partial class v535
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace sistemav5.Migrations
 
             modelBuilder.Entity("sistemav5.Models.Cliente", b =>
                 {
-                    b.Property<int>("IdCliente")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -33,11 +33,9 @@ namespace sistemav5.Migrations
 
                     b.Property<string>("Nome");
 
-                    b.Property<int>("PedidoId");
-
                     b.Property<int>("Telefone");
 
-                    b.HasKey("IdCliente");
+                    b.HasKey("Id");
 
                     b.ToTable("Cliente");
                 });
@@ -48,11 +46,15 @@ namespace sistemav5.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("PedidoId");
+
                     b.Property<int>("ProdutoId");
 
-                    b.Property<int>("Quantidade");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.HasIndex("ProdutoId");
 
                     b.ToTable("ItensPedido");
                 });
@@ -65,27 +67,20 @@ namespace sistemav5.Migrations
 
                     b.Property<int>("ClienteId");
 
-                    b.Property<int?>("ClienteIdCliente");
-
                     b.Property<int>("ItensPedidoId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteIdCliente");
-
-                    b.HasIndex("ItensPedidoId")
-                        .IsUnique();
+                    b.HasIndex("ClienteId");
 
                     b.ToTable("Pedido");
                 });
 
             modelBuilder.Entity("sistemav5.Models.Produto", b =>
                 {
-                    b.Property<int>("IdProduto")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ItensPedidoId");
 
                     b.Property<string>("Nome");
 
@@ -93,30 +88,30 @@ namespace sistemav5.Migrations
 
                     b.Property<int>("Quantidade");
 
-                    b.HasKey("IdProduto");
-
-                    b.HasIndex("ItensPedidoId");
+                    b.HasKey("Id");
 
                     b.ToTable("Produto");
+                });
+
+            modelBuilder.Entity("sistemav5.Models.ItensPedido", b =>
+                {
+                    b.HasOne("sistemav5.Models.Pedido")
+                        .WithMany("ItensPedidos")
+                        .HasForeignKey("PedidoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("sistemav5.Models.Produto", "Produto")
+                        .WithMany("ItensPedidos")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("sistemav5.Models.Pedido", b =>
                 {
                     b.HasOne("sistemav5.Models.Cliente", "Cliente")
                         .WithMany()
-                        .HasForeignKey("ClienteIdCliente");
-
-                    b.HasOne("sistemav5.Models.ItensPedido", "ItensPedido")
-                        .WithOne("Pedido")
-                        .HasForeignKey("sistemav5.Models.Pedido", "ItensPedidoId")
+                        .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("sistemav5.Models.Produto", b =>
-                {
-                    b.HasOne("sistemav5.Models.ItensPedido")
-                        .WithMany("Produtos")
-                        .HasForeignKey("ItensPedidoId");
                 });
 #pragma warning restore 612, 618
         }

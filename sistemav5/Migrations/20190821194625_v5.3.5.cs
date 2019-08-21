@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace sistemav5.Migrations
 {
-    public partial class v500 : Migration
+    public partial class v535 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,17 +12,51 @@ namespace sistemav5.Migrations
                 name: "Cliente",
                 columns: table => new
                 {
-                    IdCliente = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Nome = table.Column<string>(nullable: true),
                     DataNascimento = table.Column<DateTime>(nullable: false),
                     Email = table.Column<string>(nullable: true),
-                    Telefone = table.Column<int>(nullable: false),
-                    PedidoId = table.Column<int>(nullable: false)
+                    Telefone = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cliente", x => x.IdCliente);
+                    table.PrimaryKey("PK_Cliente", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Produto",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Nome = table.Column<string>(nullable: true),
+                    Preco = table.Column<double>(nullable: false),
+                    Quantidade = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Produto", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pedido",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClienteId = table.Column<int>(nullable: false),
+                    ItensPedidoId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pedido", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pedido_Cliente_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Cliente",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -32,82 +66,46 @@ namespace sistemav5.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ProdutoId = table.Column<int>(nullable: false),
-                    Quantidade = table.Column<int>(nullable: false)
+                    PedidoId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ItensPedido", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Pedido",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Quantidade = table.Column<int>(nullable: false),
-                    ItensPedidoId = table.Column<int>(nullable: false),
-                    ClienteId = table.Column<int>(nullable: false),
-                    ClienteIdCliente = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pedido", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Pedido_Cliente_ClienteIdCliente",
-                        column: x => x.ClienteIdCliente,
-                        principalTable: "Cliente",
-                        principalColumn: "IdCliente",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_ItensPedido_Pedido_PedidoId",
+                        column: x => x.PedidoId,
+                        principalTable: "Pedido",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Pedido_ItensPedido_ItensPedidoId",
-                        column: x => x.ItensPedidoId,
-                        principalTable: "ItensPedido",
+                        name: "FK_ItensPedido_Produto_ProdutoId",
+                        column: x => x.ProdutoId,
+                        principalTable: "Produto",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Produto",
-                columns: table => new
-                {
-                    IdProduto = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Nome = table.Column<string>(nullable: true),
-                    Preco = table.Column<double>(nullable: false),
-                    Quantidade = table.Column<int>(nullable: false),
-                    ItensPedidoId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Produto", x => x.IdProduto);
-                    table.ForeignKey(
-                        name: "FK_Produto_ItensPedido_ItensPedidoId",
-                        column: x => x.ItensPedidoId,
-                        principalTable: "ItensPedido",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_ItensPedido_PedidoId",
+                table: "ItensPedido",
+                column: "PedidoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pedido_ClienteIdCliente",
+                name: "IX_ItensPedido_ProdutoId",
+                table: "ItensPedido",
+                column: "ProdutoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pedido_ClienteId",
                 table: "Pedido",
-                column: "ClienteIdCliente");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pedido_ItensPedidoId",
-                table: "Pedido",
-                column: "ItensPedidoId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Produto_ItensPedidoId",
-                table: "Produto",
-                column: "ItensPedidoId");
+                column: "ClienteId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ItensPedido");
+
             migrationBuilder.DropTable(
                 name: "Pedido");
 
@@ -116,9 +114,6 @@ namespace sistemav5.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cliente");
-
-            migrationBuilder.DropTable(
-                name: "ItensPedido");
         }
     }
 }

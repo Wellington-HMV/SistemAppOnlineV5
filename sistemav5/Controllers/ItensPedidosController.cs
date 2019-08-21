@@ -48,7 +48,7 @@ namespace sistemav5.Controllers
                 return NotFound();
             }
 
-            var itensPedido = await _context.ItensPedido.Include(p=>p.Produtos)
+            var itensPedido = await _context.ItensPedido
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (itensPedido == null)
             {

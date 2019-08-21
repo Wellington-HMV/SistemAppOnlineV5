@@ -33,13 +33,14 @@ namespace sistemav5.Controllers
             }
 
             var cliente = await _context.Cliente
-                .FirstOrDefaultAsync(m => m.IdCliente == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (cliente == null)
             {
                 return NotFound();
             }
+           
 
-            return View(cliente);
+            return View(_context.Pedido.Where(p => p.Id == id).Select(p => p.Id));
         }
 
         // GET: Clientes/Create
@@ -53,7 +54,7 @@ namespace sistemav5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdCliente,Nome,DataNascimento,Email,Telefone,PedidoId")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("Id,Nome,DataNascimento,Email,Telefone,PedidoId")] Cliente cliente)
         {
             if (ModelState.IsValid)
             {
@@ -85,9 +86,9 @@ namespace sistemav5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdCliente,Nome,DataNascimento,Email,Telefone,PedidoId")] Cliente cliente)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,DataNascimento,Email,Telefone,PedidoId")] Cliente cliente)
         {
-            if (id != cliente.IdCliente)
+            if (id != cliente.Id)
             {
                 return NotFound();
             }
@@ -101,7 +102,7 @@ namespace sistemav5.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClienteExists(cliente.IdCliente))
+                    if (!ClienteExists(cliente.Id))
                     {
                         return NotFound();
                     }
@@ -124,7 +125,7 @@ namespace sistemav5.Controllers
             }
 
             var cliente = await _context.Cliente
-                .FirstOrDefaultAsync(m => m.IdCliente == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (cliente == null)
             {
                 return NotFound();
@@ -146,7 +147,7 @@ namespace sistemav5.Controllers
 
         private bool ClienteExists(int id)
         {
-            return _context.Cliente.Any(e => e.IdCliente == id);
+            return _context.Cliente.Any(e => e.Id == id);
         }
     }
 }

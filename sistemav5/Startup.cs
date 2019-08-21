@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using sistemav5.Models;
 using sistemav5.Services;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace sistemav5
 {
@@ -46,9 +48,19 @@ namespace sistemav5
             services.AddScoped<ItensPedidoService>();
         }
 
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            var ptBr = new CultureInfo("pt-BR"); // idiomas da aplicação
+            var localizationOptions = new RequestLocalizationOptions()
+            {
+                DefaultRequestCulture = new RequestCulture(ptBr),
+                SupportedCultures = new List<CultureInfo> { ptBr },
+                SupportedUICultures = new List<CultureInfo> { ptBr }
+            };
+            app.UseRequestLocalization(localizationOptions);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

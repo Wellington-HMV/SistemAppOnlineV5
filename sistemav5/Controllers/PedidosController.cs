@@ -64,7 +64,7 @@ namespace sistemav5.Controllers
             var produto = await _produtoService.FindProdutosAsync();
             var clientes = await _clienteService.FindClientesAsync();
             var itensPedido = await _itensPedidoService.FindItensPedidoAsync();
-            var viewModel = new PedidoViewModel { Clientes = clientes, ItensPedidos = itensPedido };
+            var viewModel = new PedidoViewModel { Clientes = clientes, Produtos = produto };
             return View(viewModel);
         }
 
@@ -77,9 +77,10 @@ namespace sistemav5.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var produto = await _produtoService.FindProdutosAsync();
                 var clientes = await _clienteService.FindClientesAsync();
                 var itensPedido = await _itensPedidoService.FindItensPedidoAsync();
-                var viewModel = new PedidoViewModel { Clientes = clientes, ItensPedidos = itensPedido };
+                var viewModel = new PedidoViewModel { Clientes = clientes, Produtos = produto };
                 return View(viewModel);
             }
                 _context.Add(pedido);

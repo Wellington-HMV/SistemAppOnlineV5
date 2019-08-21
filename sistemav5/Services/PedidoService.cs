@@ -16,7 +16,7 @@ namespace sistemav5.Services
         }
         public async Task <List<Pedido>> FindPedidosAsync()
         {
-            return await _context.Pedido.Include(cl => cl.Cliente).Include(ip=>ip.ItensPedido).ToListAsync();
+            return await _context.Pedido.Include(cl => cl.Cliente).ToListAsync();
             //return await _context.Pedido.Include(obj=>obj.ItensPedidoId).OrderBy(obj=>obj.Cliente).ToListAsync();
         }
     }

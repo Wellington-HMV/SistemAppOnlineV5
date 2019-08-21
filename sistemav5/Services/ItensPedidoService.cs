@@ -16,7 +16,15 @@ namespace sistemav5.Services
         }
         public async Task<List<ItensPedido>> FindItensPedidoAsync()
         {
-            return await _context.ItensPedido.Include(obj=>obj.Produtos).ToListAsync();
+            return await _context.ItensPedido.ToListAsync();
+        }
+        public async Task UpdateDBAsync(ItensPedido itp)
+        {
+             var pedidoId =   _context.Pedido.Select(p => p.Id);
+             var prodId =   _context.Produto.Select(p => p.Id);
+
+            _context.Update(itp);
+            await _context.SaveChangesAsync();
         }
         
     }
