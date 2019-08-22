@@ -83,8 +83,9 @@ namespace sistemav5.Controllers
                 var viewModel = new PedidoViewModel { Clientes = clientes, Produtos = produto };
                 return View(viewModel);
             }
-                _context.Add(pedido);
-                await _context.SaveChangesAsync();
+            await _pedidoService.insertToItensAsync(pedido);
+                //_context.Add(pedido);
+                //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
         }
 
