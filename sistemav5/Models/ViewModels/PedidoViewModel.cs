@@ -9,6 +9,8 @@ namespace sistemav5.Models.ViewModels
     {
         public Pedido Pedido { get; set; }
         public ICollection<Cliente> Clientes { get; set; }
+        public int ClienteId { get; set; }
         public ICollection<Produto> Produtos { get; set; }
+        public int ProdutoId { get; set; }
     }
 }
