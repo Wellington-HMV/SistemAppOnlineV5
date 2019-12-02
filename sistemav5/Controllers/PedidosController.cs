@@ -36,7 +36,8 @@ namespace sistemav5.Controllers
         public async Task<IActionResult> Index()
         {
             var list = await _pedidoService.FindPedidosAsync();
-            return View(list);
+            IList<Pedido> pedidos = list;
+            return View(pedidos);
             //return View(await _context.Pedido.ToListAsync());
         }
 
@@ -83,9 +84,8 @@ namespace sistemav5.Controllers
                 var viewModel = new PedidoViewModel { Clientes = clientes, Produtos = produto };
                 return View(viewModel);
             }
-            await _pedidoService.insertToItensAsync(pedido);
-                //_context.Add(pedido);
-                //await _context.SaveChangesAsync();
+                _context.Add(pedido);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
         }
 

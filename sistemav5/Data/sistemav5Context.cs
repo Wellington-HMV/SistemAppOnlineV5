@@ -17,10 +17,5 @@ namespace sistemav5.Models
         public DbSet<ItensPedido> ItensPedido { get; set; }
         public DbSet<Produto> Produto { get; set; }
         public DbSet<Pedido> Pedido { get; set; }
-
-        internal void Update(ItensPedido itensPedido, object ip)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
