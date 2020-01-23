@@ -44,13 +44,13 @@ namespace sistemav5.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ClienteId");
+
                     b.Property<int>("PedidoId");
 
-                    b.Property<int>("ProdutoId");
+                    b.Property<int?>("ProdutoId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PedidoId");
 
                     b.HasIndex("ProdutoId");
 
@@ -93,15 +93,9 @@ namespace sistemav5.Migrations
 
             modelBuilder.Entity("sistemav5.Models.ItensPedido", b =>
                 {
-                    b.HasOne("sistemav5.Models.Pedido")
+                    b.HasOne("sistemav5.Models.Produto")
                         .WithMany("ItensPedidos")
-                        .HasForeignKey("PedidoId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("sistemav5.Models.Produto", "Produto")
-                        .WithMany("ItensPedidos")
-                        .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ProdutoId");
                 });
 
             modelBuilder.Entity("sistemav5.Models.Pedido", b =>

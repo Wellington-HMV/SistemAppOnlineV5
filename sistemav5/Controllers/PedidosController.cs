@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -18,26 +17,33 @@ namespace sistemav5.Controllers
         private readonly ProdutoService _produtoService;
         private readonly ClienteService _clienteService;
         private readonly ItensPedidoService _itensPedidoService;
+        private readonly ItensPedido _itensPedido;
+        private readonly Pedido _pedido;
 
         public PedidosController(sistemav5Context context
                                                         , PedidoService pedidoService
                                                         , ProdutoService produtoService
                                                         , ItensPedidoService itensPedidoService
-                                                        , ClienteService clienteService)
+                                                        , Pedido pedido
+                                                        , ClienteService clienteService
+                                                        , ItensPedido itensPedido)
         {
             _context = context;
             _pedidoService = pedidoService;
             _produtoService = produtoService;
             _clienteService = clienteService;
+            _pedido = pedido;
             _itensPedidoService = itensPedidoService;
+            _itensPedido = itensPedido;
         }
 
         // GET: Pedidos
         public async Task<IActionResult> Index()
         {
-            var list = await _pedidoService.FindPedidosAsync();
-            return View(list);
-            //return View(await _context.Pedido.ToListAsync());
+            //var list = await _pedidoService.FindPedidosAsync();
+            //IList<Pedido> pedidos = list;
+            //return View(pedidos);
+            return View(await _context.Pedido.ToListAsync());
         }
 
         // GET: Pedidos/Details/5
@@ -61,11 +67,20 @@ namespace sistemav5.Controllers
         // GET: Pedidos/Create
         public async Task<IActionResult> Create()
         {
-            var produto = await _produtoService.FindProdutosAsync();
-            var clientes = await _clienteService.FindClientesAsync();
-            var itensPedido = await _itensPedidoService.FindItensPedidoAsync();
-            var viewModel = new PedidoViewModel { Clientes = clientes, Produtos = produto };
+            MontasListasViewBag();
+
+            //var itensPedido = await _itensPedidoService.FindItensPedidoAsync();
+            var viewModel = new PedidoViewModel { Id = 0 };
             return View(viewModel);
+        }
+
+        private async void MontasListasViewBag()
+        {
+            ViewBag.Produtos = await _produtoService.FindProdutosAsync();
+
+            //Cliente
+            var clientes = await _clienteService.FindClientesAsync();
+            ViewBag.Clientes = clientes.ToList(); // new SelectList(clientes.ToList(), "Id", "Nome");            
         }
 
         // POST: Pedidos/Create
@@ -73,19 +88,21 @@ namespace sistemav5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Pedido pedido)
+        public async Task<IActionResult> Create(PedidoViewModel pedido)
         {
             if (!ModelState.IsValid)
             {
-                var produto = await _produtoService.FindProdutosAsync();
-                var clientes = await _clienteService.FindClientesAsync();
-                var itensPedido = await _itensPedidoService.FindItensPedidoAsync();
-                var viewModel = new PedidoViewModel { Clientes = clientes, Produtos = produto };
+                //Pedido pedido = new Pedido();
+                pedido.ClienteId = _itensPedido.ClienteId;
+                //pedido.ItensPedidoId = _itensPedido.Id;
+                //pedido.ItensPedidos.Add(_itensPedido);
+
+                var viewModel = new PedidoViewModel { Cliente = pedido.Cliente };
                 return View(viewModel);
             }
-                _context.Add(pedido);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            _context.Add(pedido);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Pedidos/Edit/5
@@ -109,7 +126,7 @@ namespace sistemav5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,Pedido pedido)
+        public async Task<IActionResult> Edit(int id, Pedido pedido)
         {
             if (id != pedido.Id)
             {
@@ -171,6 +188,25 @@ namespace sistemav5.Controllers
         private bool PedidoExists(int id)
         {
             return _context.Pedido.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddRequests(Cliente cliente, Produto produto)
+        {
+            if (!ModelState.IsValid)
+            {
+                _itensPedido.Produtos.Add(produto);
+                _itensPedido.ClienteId = cliente.Id;
+                _itensPedido.PedidoId = _pedido.Id;
+
+
+                var viewModel = new ItensPedidoViewModel { ItensPedido = _itensPedido };
+                return View(viewModel);
+            }
+            _context.ItensPedido.Add(_itensPedido);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Create));
         }
     }
 }

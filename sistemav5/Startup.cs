@@ -46,6 +46,9 @@ namespace sistemav5
             services.AddScoped<ProdutoService>();
             services.AddScoped<ClienteService>();
             services.AddScoped<ItensPedidoService>();
+            services.AddScoped<ItensPedido>();
+            services.AddScoped<Cliente>();
+            services.AddScoped<Pedido>();
         }
 
 

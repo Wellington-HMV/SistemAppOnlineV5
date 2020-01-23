@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace sistemav5.Models
@@ -15,8 +16,9 @@ namespace sistemav5.Models
         public int ItensPedidoId { get; set; }
         public Cliente Cliente { get; set; }
 
-        public ICollection<ItensPedido> ItensPedidos { get; set; } = new List<ItensPedido>();
+        [NotMapped]
+        public ICollection<ItensPedido> ItensPedidos { get; set; }
 
-        public Pedido() { }
+        //public Pedido() { }
     }
 }
